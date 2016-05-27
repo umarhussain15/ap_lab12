@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+
+    <bean id="attendanceDataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/attendance_total"/>
+        <property name="username" value="root"/>
+        <property name="password" value="seecs@123"/>
+    </bean>
+    <bean id="dataSourceGradeBook"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/hibernate_test"/>
+        <property name="username" value="root"/>
+        <property name="password" value="seecs@123"/>
+    </bean>
+    <!--Bean For HBM MAPPING FILES-->
+    <bean id="hibernate4MappingSessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="attendanceDataSource"></property>
+
+        <property name="mappingResources">
+            <list>
+                <value>attendance/entity/Attendance.hbm.xml</value>
+                <value>attendance/entity/Course.hbm.xml</value>
+                <value>attendance/entity/Student.hbm.xml</value>
+                <value>attendance/entity/Teacher.hbm.xml</value>
+            </list>
+        </property>
+
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">false</prop>
+
+            </props>
+        </property>
+    </bean>
+
+
+    <!--Bean For Annotations-->
+    <bean id="hibernate4AnnotatedSessionFactory"
+          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceGradeBook" />
+        <property name="annotatedClasses">
+            <list>
+                <value>entity.Clo</value>
+                <value>entity.Content</value>
+                <value>entity.Course</value>
+                <value>entity.Grade</value>
+                <value>entity.Student</value>
+                <value>entity.Teacher</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">false</prop>
+            </props>
+        </property>
+    </bean>
+    <!--Beans for DAO of GradeBook-->
+    <bean id="cloDao" class="dao.CloDao">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
+    <bean id="contentDao" class="dao.ContentDao">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
+    <bean id="courseDao" class="dao.CourseDao">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
+    <bean id="gradeDao" class="dao.GradeDao">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
+    <bean id="studentDao" class="dao.StudentDao">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
+    <bean id="teacherDao" class="dao.TeacherDao">
+        <property name="sessionFactory" ref="hibernate4AnnotatedSessionFactory" />
+    </bean>
+
+    <!--<bean id="attendanceSystem" class="attendance.ui.AttendanceSystem">-->
+        <!--<property name="sessionFactory" ref="hibernate4MappingSessionFactory" />-->
+    <!--</bean>-->
+    <!--<bean id="takeAttendence" class="attendance.ui.TakeAttendence">-->
+        <!--<property name="sessionFactory" ref="hibernate4MappingSessionFactory" />-->
+    <!--</bean>-->
+</beans>
